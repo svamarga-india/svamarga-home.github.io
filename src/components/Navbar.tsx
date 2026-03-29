@@ -11,16 +11,23 @@ export default function Navbar() {
         <span className="serif text-2xl font-semibold tracking-tight">Svamarga</span>
       </Link>
       <div className="flex gap-8 items-center">
-        <Link 
-          to="/#careers" 
-          className="text-sm uppercase tracking-widest font-medium hover:text-brand-olive transition-colors"
+        <button 
           onClick={() => {
             const el = document.getElementById('careers');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              // If not on home page, navigate home then scroll
+              window.location.href = '/#/';
+              setTimeout(() => {
+                document.getElementById('careers')?.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }
           }}
+          className="text-sm uppercase tracking-widest font-medium hover:text-brand-olive transition-colors cursor-pointer"
         >
           Careers
-        </Link>
+        </button>
         <Link 
           to="/apply" 
           className="bg-brand-olive text-white px-6 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"

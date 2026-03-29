@@ -28,19 +28,38 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="serif text-7xl md:text-9xl font-bold mb-8 tracking-tighter"
+          className="serif text-7xl md:text-9xl font-bold mb-4 tracking-tighter flex flex-col items-center justify-center"
         >
           Svamarga
+          <span className="text-xl md:text-3xl font-light italic opacity-40 tracking-widest mt-2">
+            one's own path
+          </span>
         </motion.h1>
         
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="serif text-2xl md:text-4xl max-w-4xl leading-relaxed italic text-gray-700"
+          className="serif text-2xl md:text-4xl max-w-4xl leading-relaxed italic text-gray-700 mt-8"
         >
-          Let's carve out our own path and reimagine a 'developed' India defined by it's Yoga centres, forests, ayurveda, pan-Indian cuisine, traditional clothing, history and mythology, diversity, handicrafts, classical/folk music, regional movies.
+          We reimagine a 'Developed' India known for it's Yoga centres, forests, Ayurveda, pan-Indian cuisine, traditional clothing, history and mythology, diversity, handicrafts, classical and folk music, and regional movies.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-10"
+        >
+          <button 
+            onClick={() => {
+              document.getElementById('careers')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="serif text-2xl md:text-3xl text-brand-olive border-b-2 border-brand-olive/30 hover:border-brand-olive transition-all pb-1 cursor-pointer"
+          >
+            Join us
+          </button>
+        </motion.div>
         
         <motion.div 
           initial={{ opacity: 0 }}
