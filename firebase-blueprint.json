@@ -19,6 +19,19 @@
           "format": "uri",
           "description": "A link to the applicant's portfolio or work."
         },
+        "linkedinUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "A link to the applicant's LinkedIn profile."
+        },
+        "hobbies": {
+          "type": "string",
+          "description": "The applicant's hobbies and interests."
+        },
+        "nationBuilding": {
+          "type": "string",
+          "description": "The applicant's thoughts on nation building in the context of a Developed India."
+        },
         "whySvamarga": {
           "type": "string",
           "description": "The applicant's motivation for joining Svamarga."

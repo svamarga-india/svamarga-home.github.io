@@ -11,6 +11,9 @@ service cloud.firestore {
     //   - fullName: string (required, 1-100 chars)
     //   - email: string (required, valid email format)
     //   - portfolioUrl: string (optional, valid URL format)
+    //   - linkedinUrl: string (optional, valid URL format)
+    //   - hobbies: string (optional, 0-1000 chars)
+    //   - nationBuilding: string (optional, 0-2000 chars)
     //   - whySvamarga: string (optional, 0-2000 chars)
     //   - roleId: string (required)
     //   - roleTitle: string (optional)
@@ -41,11 +44,15 @@ service cloud.firestore {
     }
 
     function isValidApplication(data) {
+      let allowedFields = ['fullName', 'email', 'portfolioUrl', 'linkedinUrl', 'hobbies', 'nationBuilding', 'whySvamarga', 'roleId', 'roleTitle', 'submittedAt', 'status'];
       return data.keys().hasAll(['fullName', 'email', 'roleId', 'submittedAt', 'status']) &&
-             data.keys().hasOnly(['fullName', 'email', 'portfolioUrl', 'whySvamarga', 'roleId', 'roleTitle', 'submittedAt', 'status']) &&
+             data.keys().hasOnly(allowedFields) &&
              data.fullName is string && data.fullName.size() >= 1 && data.fullName.size() <= 100 &&
              isValidEmail(data.email) &&
              (!('portfolioUrl' in data) || isValidUrl(data.portfolioUrl)) &&
+             (!('linkedinUrl' in data) || isValidUrl(data.linkedinUrl)) &&
+             (!('hobbies' in data) || (data.hobbies is string && data.hobbies.size() <= 1000)) &&
+             (!('nationBuilding' in data) || (data.nationBuilding is string && data.nationBuilding.size() <= 2000)) &&
              (!('whySvamarga' in data) || (data.whySvamarga is string && data.whySvamarga.size() <= 2000)) &&
              data.roleId is string &&
              data.submittedAt is timestamp &&

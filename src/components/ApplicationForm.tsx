@@ -50,7 +50,10 @@ export default function ApplicationForm() {
     const applicationData = {
       fullName: formData.get('fullName') as string,
       email: formData.get('email') as string,
+      linkedinUrl: formData.get('linkedinUrl') as string || null,
       portfolioUrl: formData.get('portfolioUrl') as string || null,
+      hobbies: formData.get('hobbies') as string || null,
+      nationBuilding: formData.get('nationBuilding') as string || null,
       whySvamarga: formData.get('whySvamarga') as string || null,
       roleId: roleId || 'general',
       roleTitle: roleTitle,
@@ -134,28 +137,52 @@ export default function ApplicationForm() {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Portfolio / Work Links</label>
-          <div className="relative">
-            <LinkIcon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              name="portfolioUrl"
-              type="url" 
-              placeholder="https://github.com/username or your website"
-              className="w-full bg-brand-cream/50 border-none rounded-2xl pl-12 pr-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
-            />
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">LinkedIn Profile</label>
+            <div className="relative">
+              <LinkIcon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input 
+                name="linkedinUrl"
+                type="url" 
+                placeholder="https://linkedin.com/in/username"
+                className="w-full bg-brand-cream/50 border-none rounded-2xl pl-12 pr-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Portfolio / Work Links</label>
+            <div className="relative">
+              <LinkIcon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input 
+                name="portfolioUrl"
+                type="url" 
+                placeholder="https://github.com/username or your website"
+                className="w-full bg-brand-cream/50 border-none rounded-2xl pl-12 pr-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
+              />
+            </div>
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Upload CV / Resume</label>
-          <div className="border-2 border-dashed border-brand-cream rounded-2xl p-8 text-center hover:border-brand-olive/30 transition-colors cursor-pointer group">
-            <Upload size={32} className="mx-auto mb-3 text-gray-300 group-hover:text-brand-olive transition-colors" />
-            <p className="text-sm text-gray-500">Click to upload or drag and drop</p>
-            <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-widest">PDF, DOCX (Max 5MB)</p>
-            <input type="file" className="hidden" />
-            <p className="text-[10px] text-brand-olive mt-2 font-medium italic">Note: File upload is coming soon. Please provide a link above for now.</p>
-          </div>
+          <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Hobbies and Interests</label>
+          <textarea 
+            name="hobbies"
+            rows={3}
+            placeholder="Tell us what you enjoy doing in your free time..."
+            className="w-full bg-brand-cream/50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all resize-none"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Nation Building</label>
+          <p className="text-[10px] text-gray-400 ml-1 mb-2 italic">What does 'Nation Building' mean to you in the context of a 'Developed' India?</p>
+          <textarea 
+            name="nationBuilding"
+            rows={4}
+            placeholder="Share your thoughts on how we can contribute to India's growth..."
+            className="w-full bg-brand-cream/50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all resize-none"
+          />
         </div>
 
         <div className="space-y-2">
