@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowLeft, CheckCircle2, Upload, Link as LinkIcon, Loader2 } from 'lucide-react';
@@ -12,6 +12,10 @@ export default function ApplicationForm() {
   const roleId = searchParams.get('role');
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const roleTitle = roleId === 'cs-intern' 
     ? 'Computer Science Intern' 

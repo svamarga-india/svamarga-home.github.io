@@ -2,11 +2,14 @@ export interface Application {
   id?: string;
   fullName: string;
   email: string;
+  linkedinUrl?: string;
   portfolioUrl?: string;
+  hobbies?: string;
+  nationBuilding?: string;
   whySvamarga?: string;
   roleId: string;
   roleTitle?: string;
-  submittedAt: Date;
+  submittedAt: any; // Using any for Firestore timestamp
   status: 'pending' | 'reviewed' | 'accepted' | 'rejected';
 }
 
