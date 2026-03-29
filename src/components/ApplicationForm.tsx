@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, CheckCircle2, Upload, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Upload, Link as LinkIcon, Loader2 } from 'lucide-react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { OperationType } from '../types';
 
 export default function ApplicationForm() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const roleId = searchParams.get('role');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const roleTitle = roleId === 'cs-intern' 
     ? 'Computer Science Intern' 
@@ -15,9 +19,54 @@ export default function ApplicationForm() {
       ? 'Marketing Intern' 
       : 'Internship Program';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFirestoreError = (error: unknown, operationType: OperationType, path: string | null) => {
+    const errInfo = {
+      error: error instanceof Error ? error.message : String(error),
+      authInfo: {
+        userId: auth.currentUser?.uid,
+        email: auth.currentUser?.email,
+        emailVerified: auth.currentUser?.emailVerified,
+        isAnonymous: auth.currentUser?.isAnonymous,
+        tenantId: auth.currentUser?.tenantId,
+        providerInfo: auth.currentUser?.providerData.map(provider => ({
+          providerId: provider.providerId,
+          displayName: provider.displayName,
+          email: provider.email,
+          photoUrl: provider.photoURL
+        })) || []
+      },
+      operationType,
+      path
+    };
+    console.error('Firestore Error: ', JSON.stringify(errInfo));
+    throw new Error(JSON.stringify(errInfo));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const applicationData = {
+      fullName: formData.get('fullName') as string,
+      email: formData.get('email') as string,
+      portfolioUrl: formData.get('portfolioUrl') as string || null,
+      whySvamarga: formData.get('whySvamarga') as string || null,
+      roleId: roleId || 'general',
+      roleTitle: roleTitle,
+      submittedAt: serverTimestamp(),
+      status: 'pending'
+    };
+
+    const path = 'applications';
+    try {
+      await addDoc(collection(db, path), applicationData);
+      setSubmitted(true);
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, path);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -67,6 +116,7 @@ export default function ApplicationForm() {
             <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Full Name</label>
             <input 
               required
+              name="fullName"
               type="text" 
               placeholder="Arjun Sharma"
               className="w-full bg-brand-cream/50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
@@ -76,6 +126,7 @@ export default function ApplicationForm() {
             <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Email Address</label>
             <input 
               required
+              name="email"
               type="email" 
               placeholder="arjun@example.com"
               className="w-full bg-brand-cream/50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
@@ -88,6 +139,7 @@ export default function ApplicationForm() {
           <div className="relative">
             <LinkIcon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input 
+              name="portfolioUrl"
               type="url" 
               placeholder="https://github.com/username or your website"
               className="w-full bg-brand-cream/50 border-none rounded-2xl pl-12 pr-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
@@ -102,12 +154,14 @@ export default function ApplicationForm() {
             <p className="text-sm text-gray-500">Click to upload or drag and drop</p>
             <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-widest">PDF, DOCX (Max 5MB)</p>
             <input type="file" className="hidden" />
+            <p className="text-[10px] text-brand-olive mt-2 font-medium italic">Note: File upload is coming soon. Please provide a link above for now.</p>
           </div>
         </div>
 
         <div className="space-y-2">
           <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Why Svamarga?</label>
           <textarea 
+            name="whySvamarga"
             rows={4}
             placeholder="Tell us why you want to join our mission..."
             className="w-full bg-brand-cream/50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all resize-none"
@@ -115,10 +169,18 @@ export default function ApplicationForm() {
         </div>
 
         <button 
+          disabled={isSubmitting}
           type="submit"
-          className="w-full bg-brand-olive text-white py-5 rounded-2xl font-bold uppercase tracking-[0.2em] text-sm hover:opacity-90 transition-opacity shadow-lg shadow-brand-olive/20"
+          className="w-full bg-brand-olive text-white py-5 rounded-2xl font-bold uppercase tracking-[0.2em] text-sm hover:opacity-90 transition-opacity shadow-lg shadow-brand-olive/20 flex items-center justify-center gap-3 disabled:opacity-50"
         >
-          Submit Application
+          {isSubmitting ? (
+            <>
+              <Loader2 className="animate-spin" size={20} />
+              Submitting...
+            </>
+          ) : (
+            'Submit Application'
+          )}
         </button>
       </form>
     </div>

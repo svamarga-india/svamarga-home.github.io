@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Internship Application",
+      "description": "Details of an intern's application for a role.",
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string",
+          "description": "The full name of the applicant."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The email address of the applicant."
+        },
+        "portfolioUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "A link to the applicant's portfolio or work."
+        },
+        "whySvamarga": {
+          "type": "string",
+          "description": "The applicant's motivation for joining Svamarga."
+        },
+        "roleId": {
+          "type": "string",
+          "description": "The ID of the role they are applying for."
+        },
+        "roleTitle": {
+          "type": "string",
+          "description": "The title of the role they are applying for."
+        },
+        "submittedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the application was submitted."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "reviewed", "accepted", "rejected"],
+          "description": "The current status of the application."
+        }
+      },
+      "required": ["fullName", "email", "roleId", "submittedAt", "status"]
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": "Application",
+      "description": "Collection of all internship applications."
+    }
+  }
+}
