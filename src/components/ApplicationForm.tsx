@@ -1,0 +1,126 @@
+import React, { useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
+import { ArrowLeft, CheckCircle2, Upload, Link as LinkIcon } from 'lucide-react';
+
+export default function ApplicationForm() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const roleId = searchParams.get('role');
+  const [submitted, setSubmitted] = useState(false);
+
+  const roleTitle = roleId === 'cs-intern' 
+    ? 'Computer Science Intern' 
+    : roleId === 'marketing-intern' 
+      ? 'Marketing Intern' 
+      : 'Internship Program';
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center px-6">
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-white p-12 rounded-[3rem] text-center max-w-md shadow-xl"
+        >
+          <div className="bg-green-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
+            <CheckCircle2 size={40} />
+          </div>
+          <h2 className="serif text-4xl font-medium mb-4">Application Received</h2>
+          <p className="text-gray-500 mb-8">
+            Thank you for your interest in Svamarga. Our team will review your application and get back to you soon.
+          </p>
+          <button 
+            onClick={() => navigate('/')}
+            className="bg-brand-olive text-white px-8 py-3 rounded-full font-medium hover:opacity-90 transition-opacity"
+          >
+            Return Home
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto px-6 py-12">
+      <button 
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-brand-olive mb-12 transition-colors"
+      >
+        <ArrowLeft size={16} /> Back
+      </button>
+
+      <div className="mb-12">
+        <span className="text-xs uppercase tracking-[0.3em] text-brand-olive font-bold mb-2 block">Application Form</span>
+        <h1 className="serif text-5xl font-medium mb-4">{roleTitle}</h1>
+        <p className="text-gray-500">Please provide your details and we'll reach out to you.</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-8 bg-white p-10 rounded-[2.5rem] shadow-sm border border-black/5">
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Full Name</label>
+            <input 
+              required
+              type="text" 
+              placeholder="Arjun Sharma"
+              className="w-full bg-brand-cream/50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Email Address</label>
+            <input 
+              required
+              type="email" 
+              placeholder="arjun@example.com"
+              className="w-full bg-brand-cream/50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Portfolio / Work Links</label>
+          <div className="relative">
+            <LinkIcon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input 
+              type="url" 
+              placeholder="https://github.com/username or your website"
+              className="w-full bg-brand-cream/50 border-none rounded-2xl pl-12 pr-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Upload CV / Resume</label>
+          <div className="border-2 border-dashed border-brand-cream rounded-2xl p-8 text-center hover:border-brand-olive/30 transition-colors cursor-pointer group">
+            <Upload size={32} className="mx-auto mb-3 text-gray-300 group-hover:text-brand-olive transition-colors" />
+            <p className="text-sm text-gray-500">Click to upload or drag and drop</p>
+            <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-widest">PDF, DOCX (Max 5MB)</p>
+            <input type="file" className="hidden" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs uppercase tracking-widest font-bold text-gray-400 ml-1">Why Svamarga?</label>
+          <textarea 
+            rows={4}
+            placeholder="Tell us why you want to join our mission..."
+            className="w-full bg-brand-cream/50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-brand-olive/20 outline-none transition-all resize-none"
+          />
+        </div>
+
+        <button 
+          type="submit"
+          className="w-full bg-brand-olive text-white py-5 rounded-2xl font-bold uppercase tracking-[0.2em] text-sm hover:opacity-90 transition-opacity shadow-lg shadow-brand-olive/20"
+        >
+          Submit Application
+        </button>
+      </form>
+    </div>
+  );
+}
